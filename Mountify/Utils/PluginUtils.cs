@@ -3,8 +3,6 @@ using System.Text;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
-using Lumina.Excel.Sheets;
-using Lumina.Extensions;
 
 namespace Mountify.Utils;
 
@@ -24,12 +22,6 @@ public class PluginUtils {
         }
 
         return string.Intern(builder.ToString());
-    }
-
-    public static Mount? getMountByID(IDataManager dataManager, uint id) {
-        if (id < 1) return null;
-        var mounts = dataManager.GetExcelSheet<Mount>();
-        return mounts.FirstOrNull(mount => mount.RowId == id);
     }
 
     public unsafe static uint getCurrentMount(IClientState client) {
