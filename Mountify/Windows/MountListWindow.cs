@@ -18,14 +18,12 @@ public class MountListWindow : Window, IDisposable {
     private string filterText;
     private bool test;
 
-    private ImageService imgService;
     private PlayerMountDB playerMounts;
 
     public MountListWindow(Mountify plugin, PluginServices services) : base("Mountify") {
         this.plugin = plugin;
         dataManager = services.dataManager;
         clientState = services.clientState;
-        imgService = new ImageService(services.textureProvider);
         playerMounts = new PlayerMountDB(dataManager);
 
         SizeConstraints = new WindowSizeConstraints {
@@ -62,7 +60,7 @@ public class MountListWindow : Window, IDisposable {
         foreach (var mount in playerMounts.getMounts().Where(mount => mount.getID() > 0)) {
             try {
                 ImGui.SameLine();
-                var mountIcon = imgService.getIcon(mount.getIcon());
+                var mountIcon = ImageService.getInstance().getIcon(mount.getIcon());
                 if (ImGui.ImageButton(mountIcon.ImGuiHandle, new Vector2(45, 45)))
                     toggleMountWindow(mount);
 

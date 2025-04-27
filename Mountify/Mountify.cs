@@ -18,17 +18,17 @@ public sealed class Mountify : IDalamudPlugin {
     public readonly WindowSystem windowSystem = new("Mountify");
     private ConfigWindow configWindow { get; init; }
     private MountListWindow mountListWindow { get; init; }
-    
+
     private MountSettingsWindow mountSettingsWindow { get; init; }
 
     public Mountify(IDalamudPluginInterface pluginInterface) {
         ArgumentNullException.ThrowIfNull(pluginInterface);
-        
+
         pluginServices = new PluginServices(pluginInterface);
         initServices(pluginInterface);
-        
+
         config = pluginServices.pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-        
+
         configWindow = new ConfigWindow(this, pluginServices);
         mountListWindow = new MountListWindow(this, pluginServices);
         mountSettingsWindow = new MountSettingsWindow(this, pluginServices);
@@ -42,7 +42,6 @@ public sealed class Mountify : IDalamudPlugin {
         });
 
         pluginServices.pluginInterface.UiBuilder.Draw += drawUi;
-        
         pluginServices.pluginInterface.UiBuilder.OpenConfigUi += toggleConfigUi;
         pluginServices.pluginInterface.UiBuilder.OpenMainUi += toggleMountsUI;
     }
@@ -58,6 +57,7 @@ public sealed class Mountify : IDalamudPlugin {
     }
 
     private void initServices(IDalamudPluginInterface pluginInterface) {
+        ImageService.initService(pluginServices.textureProvider);
         MountService.initService(pluginServices);
         MountDataUtil.init(pluginInterface);
     }

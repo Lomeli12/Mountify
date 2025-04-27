@@ -9,7 +9,6 @@ namespace Mountify.Windows;
 
 public class MountSettingsWindow : Window, IDisposable {
     private PluginServices services;
-    private ImageService imgService;
 
     private MountData mount;
     private bool enableBGM;
@@ -18,7 +17,6 @@ public class MountSettingsWindow : Window, IDisposable {
         : base("Mountify-Mount_Settings", ImGuiWindowFlags.NoResize) {
         this.services = services;
 
-        imgService = new ImageService(services.textureProvider);
 
         SizeConstraints = new WindowSizeConstraints {
             MinimumSize = new Vector2(300, 200),
@@ -36,7 +34,7 @@ public class MountSettingsWindow : Window, IDisposable {
 
 
     public override void Draw() {
-        var mountIcon = imgService.getIcon(mount.getIcon());
+        var mountIcon = ImageService.getInstance().getIcon(mount.getIcon());
         ImGui.Image(mountIcon.ImGuiHandle, new Vector2(45, 45));
         ImGui.SameLine();
         ImGui.Text(mount.getFormattedName());
