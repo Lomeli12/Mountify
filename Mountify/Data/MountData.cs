@@ -7,19 +7,13 @@ namespace Mountify.Data;
 public class MountData {
     public static MountData DUMMY_DATA = new MountData();
 
-    [JsonProperty]
-    private uint id;
-    [JsonProperty]
-    private uint bgmID;
-    [JsonProperty]
-    private bool bgmEnabled;
-    
-    [JsonIgnore]
-    private ushort icon;
-    [JsonIgnore]
-    private string name;
-    [JsonIgnore]
-    private sbyte article;
+    [JsonProperty] private uint id;
+    [JsonProperty] private uint bgmID;
+    [JsonProperty] private bool bgmEnabled;
+
+    [JsonIgnore] private ushort icon;
+    [JsonIgnore] private string name;
+    [JsonIgnore] private sbyte article;
 
     private MountData() {
         id = 0;
@@ -30,7 +24,7 @@ public class MountData {
         article = 0;
     }
 
-    public MountData(uint id){
+    public MountData(uint id) {
         this.id = id;
     }
 
@@ -48,20 +42,22 @@ public class MountData {
     public ushort getIcon() => icon;
     public string getName() => name;
     public uint getBGMID() => bgmID;
-    
+
     public bool isBGMEnabled() => bgmEnabled;
-    
+
     public void setBGMEnabled(bool enabled) => bgmEnabled = enabled;
 
     public string getFormattedName() => PluginUtils.toTitleCaseExtended(getName(), article);
 
     // Only copy if IDs match, hence safe copy
     public void safeCopyData(MountData mount) {
-        if (mount.getID() != id) 
+        if (mount.getID() != id)
             return;
+
         bgmID = mount.getBGMID();
         bgmEnabled = mount.isBGMEnabled();
     }
 
-    public override string ToString() => $"[MountData ID={id} BGM ID={bgmID} BGM Enabled={bgmEnabled} Icon={icon} Name={name} Article={article}]";
+    public override string ToString() =>
+        $"[MountData ID={id} BGM ID={bgmID} BGM Enabled={bgmEnabled} Icon={icon} Name={name} Article={article}]";
 }

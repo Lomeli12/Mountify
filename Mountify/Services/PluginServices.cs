@@ -25,7 +25,7 @@ public class PluginServices : IDisposable {
     [PluginService] public ICondition condition { get; private set; } = null;
 
     [PluginService] public IPluginLog log { get; private set; } = null;
-    
+
     [PluginService] public IGameConfig gameConfig { get; private set; } = null;
 
     internal PluginServices(IDalamudPluginInterface pluginInterface) {

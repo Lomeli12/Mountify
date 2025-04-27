@@ -67,7 +67,7 @@ public class MountListUI : Window, IDisposable {
                 ImGui.SameLine();
                 if (ImGui.Button(mount.getFormattedName(), new Vector2(150, 45)))
                     UIService.getInstance().toggleMountSettingsUi(mount);
-                
+
                 ImGui.NewLine();
             } catch (Exception e) {
                 // ignored
