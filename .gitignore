@@ -1,6 +1,8 @@
 .vs/
 .git/
 .idea/
+.idea/.idea.Mountify/
+.idea/.idea.Mountify/.idea/
 obj/
 bin/
 *.user
