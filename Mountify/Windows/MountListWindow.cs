@@ -62,11 +62,11 @@ public class MountListWindow : Window, IDisposable {
                 ImGui.SameLine();
                 var mountIcon = ImageService.getInstance().getIcon(mount.getIcon());
                 if (ImGui.ImageButton(mountIcon.ImGuiHandle, new Vector2(45, 45)))
-                    toggleMountWindow(mount);
+                    UIService.getInstance().toggleMountSettingsUi(mount);
 
                 ImGui.SameLine();
                 if (ImGui.Button(mount.getFormattedName(), new Vector2(150, 45)))
-                    toggleMountWindow(mount);
+                    UIService.getInstance().toggleMountSettingsUi(mount);
                 
                 ImGui.NewLine();
             } catch (Exception e) {
@@ -75,10 +75,6 @@ public class MountListWindow : Window, IDisposable {
         }
 
         ImGui.EndChild();
-    }
-
-    private void toggleMountWindow(MountData mount) {
-        plugin.toggleMountSettingsUi(mount);
     }
 
     public void Dispose() { }
