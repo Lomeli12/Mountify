@@ -13,7 +13,6 @@ public class MountSettingsWindow : Window, IDisposable {
 
     private MountData mount;
     private bool enableBGM;
-    private MountSettings mountSettings;
 
     public MountSettingsWindow(Mountify plugin, PluginServices services)
         : base("Mountify-Mount_Settings", ImGuiWindowFlags.NoResize) {
@@ -29,9 +28,8 @@ public class MountSettingsWindow : Window, IDisposable {
 
     public void openMountData(MountData mountData) {
         services.log.Debug(mountData.ToString());
-        mount = mountData;
-        mountSettings = MountService.getInstance().getMountSettings(mountData);
-        enableBGM = mountSettings.isBGMEnabled();
+        mount = MountService.getInstance().getMountSettings(mountData);
+        enableBGM = mount.isBGMEnabled();
         WindowName = mount.getFormattedName();
         Toggle();
     }
@@ -47,9 +45,9 @@ public class MountSettingsWindow : Window, IDisposable {
 
         ImGui.NewLine();
         if (ImGui.Button("Save Mount Settings")) {
-            mountSettings.setBGMEnabled(enableBGM);
-            services.log.Debug($"Saving settings: {mountSettings}");
-            MountService.getInstance().setMountSettings(mountSettings);
+            mount.setBGMEnabled(enableBGM);
+            services.log.Debug($"Saving settings: {mount}");
+            MountService.getInstance().setMountSettings(mount);
         }
     }
 

@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 namespace Mountify;
 
-public class MountConfigHelper {
+public class MountDataUtil {
     private static string CONFIG_PATH = "";
 
     private readonly static string MOUNTIFY_FOLDER_NAME = "Mountify";
@@ -18,32 +18,30 @@ public class MountConfigHelper {
         CONFIG_PATH = pluginInterface.ConfigDirectory.FullName;
     }
 
-    public static MountSettings loadFromFile(IPluginLog log, MountData mount) {
+    public static MountData loadFromFile(IPluginLog log, MountData mount) {
         validateConfigDir();
-        var mountSettings = new MountSettings(mount.getID(), true);
-        log.Debug($"Base Mount Data: {mountSettings}");
-
+        log.Debug($"Base Mount Data: {mount}");
         var fileName = BASE_FILE_NAME + mount.getID() + ".json";
 
         var filePath = Path.Combine(CONFIG_PATH, fileName);
         if (File.Exists(filePath)) {
             log.Debug("Loading Mount Settings: " + filePath);
-            var loadedData = JsonConvert.DeserializeObject<MountSettings>(File.ReadAllText(filePath, Encoding.UTF8));
-            if (loadedData != null) mountSettings.setBGMEnabled(loadedData.isBGMEnabled());
+            var loadedData = JsonConvert.DeserializeObject<MountData>(File.ReadAllText(filePath, Encoding.UTF8));
+            if (loadedData != null) mount.safeCopyData(loadedData);
         }
 
-        return mountSettings;
+        return mount;
     }
 
-    public static void saveToFile(IPluginLog log, MountSettings mountSettings) {
-        log.Debug(mountSettings.ToString());
-        if (mountSettings.getID() < 1)
+    public static void saveToFile(IPluginLog log, MountData mountData) {
+        log.Debug($"Saving mount data: {mountData}");
+        if (mountData.getID() < 1)
             return;
 
         validateConfigDir();
-        var fileName = BASE_FILE_NAME + mountSettings.getID() + ".json";
+        var fileName = BASE_FILE_NAME + mountData.getID() + ".json";
         var filePath = Path.Combine(CONFIG_PATH, fileName);
-        var json = JsonConvert.SerializeObject(mountSettings, Formatting.Indented);
+        var json = JsonConvert.SerializeObject(mountData, Formatting.Indented);
         log.Debug($"Saving to file: {filePath}");
         File.WriteAllText(filePath, json, Encoding.UTF8);
     }

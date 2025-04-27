@@ -59,7 +59,7 @@ public sealed class Mountify : IDalamudPlugin {
 
     private void initServices(IDalamudPluginInterface pluginInterface) {
         MountService.initService(pluginServices);
-        MountConfigHelper.init(pluginInterface);
+        MountDataUtil.init(pluginInterface);
     }
 
     private void onCommand(string command, string args) {
@@ -80,7 +80,7 @@ public sealed class Mountify : IDalamudPlugin {
     public void toggleMountsUI() => mountListWindow.Toggle();
 
     public void toggleMountSettingsUi(MountData mount) {
-        pluginServices.log.Info($"Toggling Window with {mount.ToString()}");
+        pluginServices.log.Info($"Toggling Window with {mount}");
         mountSettingsWindow.openMountData(mount);
     }
 }
