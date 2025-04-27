@@ -19,7 +19,7 @@ public class MountData {
         article = 0;
     }
 
-    public MountData(uint id) : base() {
+    public MountData(uint id){
         this.id = id;
     }
 
