@@ -27,6 +27,10 @@ public class PlayerMountDB(List<MountData> mounts, IDataManager dataManager) {
         mounts.Insert(0, mount);
     }
 
+    public MountData? getMountByID(uint id) {
+        return mounts.Find(mount => mount.getID() == id);
+    }
+
     public List<MountData> getMounts() {
         if (refreshQueued) {
             refreshMounts();

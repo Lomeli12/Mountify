@@ -19,6 +19,10 @@ public class MountData {
         article = 0;
     }
 
+    public MountData(uint id) : base() {
+        this.id = id;
+    }
+
     public MountData(Mount mount) {
         id = mount.RowId;
         icon = mount.Icon;

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
@@ -16,16 +14,8 @@ public class MountConfigHelper {
 
     private readonly static string BASE_FILE_NAME = "MountID-";
 
-    private static List<MountSettings> cachedMountSettings;
-
     public static void init(IDalamudPluginInterface pluginInterface) {
         CONFIG_PATH = pluginInterface.ConfigDirectory.FullName;
-        cachedMountSettings = [];
-    }
-
-    public static MountSettings getMountSettings(IPluginLog log, MountData mount) {
-        var mountSettings = cachedMountSettings.Find(setting => setting.getID() == mount.getID()) ?? loadFromFile(log, mount);
-        return mountSettings;
     }
 
     public static MountSettings loadFromFile(IPluginLog log, MountData mount) {
@@ -41,8 +31,6 @@ public class MountConfigHelper {
             var loadedData = JsonConvert.DeserializeObject<MountSettings>(File.ReadAllText(filePath, Encoding.UTF8));
             if (loadedData != null) mountSettings.setBGMEnabled(loadedData.isBGMEnabled());
         }
-        
-        cachedMountSettings.Add(mountSettings);
 
         return mountSettings;
     }

@@ -17,25 +17,25 @@ public sealed class Mountify : IDalamudPlugin {
 
     public readonly WindowSystem windowSystem = new("Mountify");
     private ConfigWindow configWindow { get; init; }
-    private MountsWindow mountsWindow { get; init; }
+    private MountListWindow mountListWindow { get; init; }
     
-    private MountListWindow MountListWindow { get; init; }
+    private MountSettingsWindow mountSettingsWindow { get; init; }
 
     public Mountify(IDalamudPluginInterface pluginInterface) {
         ArgumentNullException.ThrowIfNull(pluginInterface);
-
+        
         pluginServices = new PluginServices(pluginInterface);
-
+        initServices(pluginInterface);
+        
         config = pluginServices.pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-        MountConfigHelper.init(pluginInterface);
         
         configWindow = new ConfigWindow(this, pluginServices);
-        mountsWindow = new MountsWindow(this, pluginServices);
-        MountListWindow = new MountListWindow(this, pluginServices);
+        mountListWindow = new MountListWindow(this, pluginServices);
+        mountSettingsWindow = new MountSettingsWindow(this, pluginServices);
 
         windowSystem.AddWindow(configWindow);
-        windowSystem.AddWindow(mountsWindow);
-        windowSystem.AddWindow(MountListWindow);
+        windowSystem.AddWindow(mountListWindow);
+        windowSystem.AddWindow(mountSettingsWindow);
 
         pluginServices.commandManager.AddHandler(commandName, new CommandInfo(onCommand) {
             HelpMessage = "A useful message to display in /xlhelp"
@@ -51,10 +51,15 @@ public sealed class Mountify : IDalamudPlugin {
         windowSystem.RemoveAllWindows();
 
         configWindow.Dispose();
-        mountsWindow.Dispose();
-        MountListWindow.Dispose();
+        mountListWindow.Dispose();
+        mountSettingsWindow.Dispose();
 
         pluginServices.commandManager.RemoveHandler(commandName);
+    }
+
+    private void initServices(IDalamudPluginInterface pluginInterface) {
+        MountService.initService(pluginServices);
+        MountConfigHelper.init(pluginInterface);
     }
 
     private void onCommand(string command, string args) {
@@ -72,10 +77,10 @@ public sealed class Mountify : IDalamudPlugin {
 
     public void toggleConfigUi() => configWindow.Toggle();
 
-    public void toggleMountsUI() => mountsWindow.Toggle();
+    public void toggleMountsUI() => mountListWindow.Toggle();
 
     public void toggleMountSettingsUi(MountData mount) {
         pluginServices.log.Info($"Toggling Window with {mount.ToString()}");
-        MountListWindow.openMountData(mount);
+        mountSettingsWindow.openMountData(mount);
     }
 }
