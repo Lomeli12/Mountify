@@ -1,15 +1,40 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 
-namespace SamplePlugin.Data;
+namespace Mountify.Data;
 
-public class MountDB {
-    public List<Mount> mounts;
-    public string dbPath;
-    public Dictionary<int, List<Mount>> sameNumberMap;
-    private static MountDB instance = new MountDB();
+public class PlayerMountDB(List<MountData> mounts, IDataManager dataManager) {
+    private bool refreshQueued;
 
-    public MountDB() {
-        
+    public PlayerMountDB(IDataManager data) : this([], data) { }
+
+    private unsafe void refreshMounts() {
+        var player = PlayerState.Instance();
+        mounts.Clear();
+        mounts.AddRange(from mount in dataManager.GetExcelSheet<Mount>()
+                        where player->IsMountUnlocked(mount.RowId)
+                        select new MountData(mount));
     }
+
+    public void moveIDToTop(uint id) {
+        if (mounts.Count < 1) return;
+        var mount = mounts.Find(mount => mount.getID() == id);
+        if (mount == null) return;
+        mounts.Remove(mount);
+        mounts.Insert(0, mount);
+    }
+
+    public List<MountData> getMounts() {
+        if (refreshQueued) {
+            refreshMounts();
+            refreshQueued = false;
+        }
+
+        return mounts;
+    }
+
+    public void queueRefresh() => refreshQueued = true;
 }
