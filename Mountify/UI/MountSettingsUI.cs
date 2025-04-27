@@ -5,15 +5,15 @@ using ImGuiNET;
 using Mountify.Data;
 using Mountify.Services;
 
-namespace Mountify.Windows;
+namespace Mountify.UI;
 
-public class MountSettingsWindow : Window, IDisposable {
+public class MountSettingsUI : Window, IDisposable {
     private PluginServices services;
 
     private MountData mount;
     private bool enableBGM;
 
-    public MountSettingsWindow(Mountify plugin, PluginServices services)
+    public MountSettingsUI(Mountify plugin, PluginServices services)
         : base("Mountify-Mount_Settings", ImGuiWindowFlags.NoResize) {
         this.services = services;
 

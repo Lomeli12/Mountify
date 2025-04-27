@@ -8,9 +8,9 @@ using Mountify.Data;
 using Mountify.Services;
 using Mountify.Utils;
 
-namespace Mountify.Windows;
+namespace Mountify.UI;
 
-public class MountListWindow : Window, IDisposable {
+public class MountListUI : Window, IDisposable {
     private Mountify plugin;
     private IDataManager dataManager;
     private IClientState clientState;
@@ -20,7 +20,7 @@ public class MountListWindow : Window, IDisposable {
 
     private PlayerMountDB playerMounts;
 
-    public MountListWindow(Mountify plugin, PluginServices services) : base("Mountify") {
+    public MountListUI(Mountify plugin, PluginServices services) : base("Mountify") {
         this.plugin = plugin;
         dataManager = services.dataManager;
         clientState = services.clientState;

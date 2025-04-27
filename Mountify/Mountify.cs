@@ -40,7 +40,7 @@ public sealed class Mountify : IDalamudPlugin {
 
     private void onCommand(string command, string args) {
         if (string.IsNullOrEmpty(args)) {
-            UIService.getInstance().toggleMountsUI();
+            UIService.getInstance().toggleListUI();
             return;
         }
 
