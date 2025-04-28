@@ -11,10 +11,7 @@ public class MountService {
     private PluginServices services;
     private List<MountData> cachedMountSettings;
 
-    public static void initService(PluginServices services) {
-        if (instance == null)
-            instance = new MountService(services);
-    }
+    public static void initService(PluginServices services) => instance = new MountService(services);
 
     public static MountService getInstance() => instance;
 
@@ -35,14 +32,13 @@ public class MountService {
         return mountSettings;
     }
 
-    public MountData setMountSettings(MountData newSettings) {
+    public void setMountSettings(MountData newSettings) {
         var index = cachedMountSettings.FindIndex(settings => settings.getID() == newSettings.getID());
         if (index < 0)
             cachedMountSettings.RemoveAt(index);
 
         MountDataUtil.saveToFile(services.log, newSettings);
         cachedMountSettings.Add(newSettings);
-        return newSettings;
     }
 
     private void onConditionChange(ConditionFlag flag, bool value) {
