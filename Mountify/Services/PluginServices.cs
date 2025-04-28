@@ -19,9 +19,7 @@ public class PluginServices : IDisposable {
     [PluginService] public IChatGui chatGUI { get; private set; } = null;
 
     [PluginService] public IDataManager dataManager { get; private set; } = null;
-
-    [PluginService] public ISigScanner sigScanner { get; private set; } = null;
-
+    
     [PluginService] public ICondition condition { get; private set; } = null;
 
     [PluginService] public IPluginLog log { get; private set; } = null;
