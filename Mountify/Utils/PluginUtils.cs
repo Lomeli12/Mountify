@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Text;
 using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Plugin.Services;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using Mountify.Services;
 
 namespace Mountify.Utils;
 
@@ -24,10 +26,10 @@ public class PluginUtils {
         return string.Intern(builder.ToString());
     }
 
-    public unsafe static uint getCurrentMount(IClientState client) {
+    public unsafe static uint getCurrentMount() {
         uint currentMount = 0;
         try {
-            IGameObject? player = client.LocalPlayer;
+            IGameObject? player = PluginServices.clientState.LocalPlayer;
             if (player == null)
                 return 0;
 
@@ -46,4 +48,7 @@ public class PluginUtils {
 
         return currentMount;
     }
+
+    public static IDalamudTextureWrap getIcon(int iconID, bool isHQ = false) =>
+        PluginServices.textureProvider.GetFromGameIcon(new GameIconLookup((uint)iconID, isHQ)).GetWrapOrEmpty();
 }

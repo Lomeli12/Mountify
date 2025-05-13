@@ -8,24 +8,22 @@ namespace Mountify.Services;
 
 public class MountService {
     private static MountService instance;
-    private PluginServices services;
     private List<MountData> cachedMountSettings;
 
-    public static void initService(PluginServices services) => instance = new MountService(services);
+    public static void initService() => instance = new MountService();
 
     public static MountService getInstance() => instance;
 
-    private MountService(PluginServices services) {
+    private MountService() {
         cachedMountSettings = [];
 
-        this.services = services;
-        services.condition.ConditionChange += onConditionChange;
+        PluginServices.condition.ConditionChange += onConditionChange;
     }
 
     public MountData getMountSettings(MountData mount) {
         var mountSettings = cachedMountSettings.Find(settings => settings.getID() == mount.getID());
         if (mountSettings == null) {
-            mountSettings = MountDataUtil.loadFromFile(services.log, mount);
+            mountSettings = MountDataUtil.loadFromFile(mount);
             cachedMountSettings.Add(mountSettings);
         }
 
@@ -37,7 +35,7 @@ public class MountService {
         if (index < 0)
             cachedMountSettings.RemoveAt(index);
 
-        MountDataUtil.saveToFile(services.log, newSettings);
+        MountDataUtil.saveToFile(newSettings);
         cachedMountSettings.Add(newSettings);
     }
 
@@ -45,13 +43,13 @@ public class MountService {
         if (flag is not (ConditionFlag.Mounted or ConditionFlag.Mounted2))
             return;
 
-        var mountID = PluginUtils.getCurrentMount(services.clientState);
+        var mountID = PluginUtils.getCurrentMount();
         if (!value || mountID <= 0) {
-            services.gameConfig.Set(SystemConfigOption.SoundChocobo, false);
+            PluginServices.gameConfig.Set(SystemConfigOption.SoundChocobo, false);
             return;
         }
 
         var settings = getMountSettings(new MountData(mountID));
-        services.gameConfig.Set(SystemConfigOption.SoundChocobo, settings.isBGMEnabled());
+        PluginServices.gameConfig.Set(SystemConfigOption.SoundChocobo, settings.isBGMEnabled());
     }
 }

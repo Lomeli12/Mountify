@@ -11,7 +11,7 @@ public class Configuration : IPluginConfiguration {
     public bool followMountBGMSettings { get; set; } = true;
 
     // the below exist just to make saving less cumbersome
-    public void Save(PluginServices services) {
-        services.pluginInterface.SavePluginConfig(this);
+    public void Save() {
+        PluginServices.pluginInterface.SavePluginConfig(this);
     }
 }

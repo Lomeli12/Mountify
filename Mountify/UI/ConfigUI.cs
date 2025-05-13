@@ -2,19 +2,16 @@
 using System.Numerics;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
-using Mountify.Services;
 
 namespace Mountify.UI;
 
 public class ConfigUI : Window, IDisposable {
     private Configuration Configuration;
 
-    private PluginServices services;
-
     // We give this window a constant ID using ###
     // This allows for labels being dynamic, like "{FPS Counter}fps###XYZ counter window",
     // and the window ID will always be "###XYZ counter window" for ImGui
-    public ConfigUI(Mountify plugin, PluginServices services) : base("A Wonderful Configuration Window###With a constant ID") {
+    public ConfigUI(Mountify plugin) : base("A Wonderful Configuration Window###With a constant ID") {
         Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse;
 
@@ -22,7 +19,6 @@ public class ConfigUI : Window, IDisposable {
         SizeCondition = ImGuiCond.Always;
 
         Configuration = plugin.config;
-        this.services = services;
     }
 
     public void Dispose() { }

@@ -1,6 +1,5 @@
 ﻿using System;
 using Dalamud.Interface.Windowing;
-using Dalamud.Plugin.Services;
 using Mountify.Data;
 using Mountify.UI;
 
@@ -17,7 +16,6 @@ public class UIService : IDisposable {
     }
 
     private readonly WindowSystem winSystem;
-    private IPluginLog log;
 
     private ConfigUI configUi { get; set; }
     private MountListUI mountListUi { get; set; }
@@ -27,30 +25,30 @@ public class UIService : IDisposable {
         winSystem = new(MountifyVars.PLUGIN_NAME);
     }
 
-    public void initWindows(Mountify plugin, PluginServices services) {
-        log = services.log;
-
-        configUi = new ConfigUI(plugin, services);
-        mountListUi = new MountListUI(plugin, services);
-        mountSettingsUi = new MountSettingsUI(plugin, services);
+    public void initWindows(Mountify plugin) {
+        configUi = new ConfigUI(plugin);
+        mountListUi = new MountListUI(plugin);
+        mountSettingsUi = new MountSettingsUI(plugin);
 
         winSystem.AddWindow(configUi);
         winSystem.AddWindow(mountListUi);
         winSystem.AddWindow(mountSettingsUi);
 
-        services.pluginInterface.UiBuilder.Draw += drawUi;
-        services.pluginInterface.UiBuilder.OpenConfigUi += toggleConfigUi;
-        services.pluginInterface.UiBuilder.OpenMainUi += toggleListUI;
+        PluginServices.pluginInterface.UiBuilder.Draw += drawUi;
+        PluginServices.pluginInterface.UiBuilder.OpenConfigUi += toggleConfigUi;
+        PluginServices.pluginInterface.UiBuilder.OpenMainUi += toggleListUI;
     }
 
     private void drawUi() => winSystem.Draw();
+
+    public MountListUI getMountListUI() => mountListUi;
 
     public void toggleConfigUi() => configUi.Toggle();
 
     public void toggleListUI() => mountListUi.Toggle();
 
     public void toggleMountSettingsUi(MountData mount) {
-        log.Info($"Toggling Window with {mount}");
+        PluginServices.log.Info($"Toggling Window with {mount}");
         mountSettingsUi.openMountData(mount);
     }
 

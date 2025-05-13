@@ -15,7 +15,7 @@ public class MountData {
     [JsonIgnore] private string name;
     [JsonIgnore] private sbyte article;
 
-    private MountData() {
+    public MountData() {
         id = 0;
         icon = 0;
         bgmID = 0;

@@ -1,37 +1,30 @@
-﻿using System;
-using Dalamud.Game;
-using Dalamud.IoC;
+﻿using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 
 namespace Mountify.Services;
 
-public class PluginServices : IDisposable {
-    internal readonly IDalamudPluginInterface pluginInterface;
-    private bool disposedValue;
+public class PluginServices {
+    public static IDalamudPluginInterface pluginInterface;
 
-    [PluginService] public ITextureProvider textureProvider { get; private set; } = null;
+    [PluginService] public static ITextureProvider textureProvider { get; private set; } = null;
 
-    [PluginService] public ICommandManager commandManager { get; private set; } = null;
+    [PluginService] public static ICommandManager commandManager { get; private set; } = null;
 
-    [PluginService] public IClientState clientState { get; private set; } = null;
+    [PluginService] public static IClientState clientState { get; private set; } = null;
 
-    [PluginService] public IChatGui chatGUI { get; private set; } = null;
+    [PluginService] public static IChatGui chatGUI { get; private set; } = null;
 
-    [PluginService] public IDataManager dataManager { get; private set; } = null;
-    
-    [PluginService] public ICondition condition { get; private set; } = null;
+    [PluginService] public static IDataManager dataManager { get; private set; } = null;
 
-    [PluginService] public IPluginLog log { get; private set; } = null;
+    [PluginService] public static ICondition condition { get; private set; } = null;
 
-    [PluginService] public IGameConfig gameConfig { get; private set; } = null;
+    [PluginService] public static IPluginLog log { get; private set; } = null;
 
-    internal PluginServices(IDalamudPluginInterface pluginInterface) {
-        this.pluginInterface = pluginInterface;
-        _ = pluginInterface.Inject(this);
-    }
+    [PluginService] public static IGameConfig gameConfig { get; private set; } = null;
 
-    public void Dispose() {
-        GC.SuppressFinalize(this);
+    public static void initService(IDalamudPluginInterface pluginInterface) {
+        pluginInterface.Create<PluginServices>();
+        PluginServices.pluginInterface = pluginInterface;
     }
 }

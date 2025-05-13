@@ -13,14 +13,11 @@ public sealed class Mountify : IDalamudPlugin {
     public Configuration config { get; init; }
 
     public Mountify(IDalamudPluginInterface pluginInterface) {
-        ArgumentNullException.ThrowIfNull(pluginInterface);
-
-        pluginServices = new PluginServices(pluginInterface);
         initServices(pluginInterface);
 
-        config = pluginServices.pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+        config = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
-        pluginServices.commandManager.AddHandler(commandName, new CommandInfo(onCommand) {
+        PluginServices.commandManager.AddHandler(commandName, new CommandInfo(onCommand) {
             HelpMessage = "A useful message to display in /xlhelp"
         });
     }
@@ -28,14 +25,15 @@ public sealed class Mountify : IDalamudPlugin {
     public void Dispose() {
         UIService.getInstance().Dispose();
 
-        pluginServices.commandManager.RemoveHandler(commandName);
+        PluginServices.commandManager.RemoveHandler(commandName);
     }
 
     private void initServices(IDalamudPluginInterface pluginInterface) {
-        UIService.getInstance().initWindows(this, pluginServices);
-        ImageService.initService(pluginServices.textureProvider);
-        MountService.initService(pluginServices);
-        MountDataUtil.init(pluginInterface);
+        PluginServices.initService(pluginInterface);
+        BGMService.initService();
+        UIService.getInstance().initWindows(this);
+        MountService.initService();
+        MountDataUtil.init();
     }
 
     private void onCommand(string command, string args) {

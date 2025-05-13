@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Numerics;
 using Dalamud.Interface.Windowing;
-using Dalamud.Plugin.Services;
 using ImGuiNET;
 using Mountify.Data;
 using Mountify.Services;
@@ -12,19 +11,15 @@ namespace Mountify.UI;
 
 public class MountListUI : Window, IDisposable {
     private Mountify plugin;
-    private IDataManager dataManager;
-    private IClientState clientState;
 
     private string filterText;
     private bool test;
 
     private PlayerMountDB playerMounts;
 
-    public MountListUI(Mountify plugin, PluginServices services) : base("Mountify") {
+    public MountListUI(Mountify plugin) : base("Mountify") {
         this.plugin = plugin;
-        dataManager = services.dataManager;
-        clientState = services.clientState;
-        playerMounts = new PlayerMountDB(dataManager);
+        playerMounts = new PlayerMountDB();
 
         SizeConstraints = new WindowSizeConstraints {
             MinimumSize = new Vector2(400, 400),
@@ -36,7 +31,7 @@ public class MountListUI : Window, IDisposable {
         base.OnOpen();
         playerMounts.queueRefresh();
         playerMounts.getMounts();
-        var currentMount = PluginUtils.getCurrentMount(clientState);
+        var currentMount = PluginUtils.getCurrentMount();
         if (currentMount <= 0) {
             return;
         }
@@ -60,7 +55,7 @@ public class MountListUI : Window, IDisposable {
         foreach (var mount in playerMounts.getMounts().Where(mount => mount.getID() > 0)) {
             try {
                 ImGui.SameLine();
-                var mountIcon = ImageService.getInstance().getIcon(mount.getIcon());
+                var mountIcon = PluginUtils.getIcon(mount.getIcon());
                 if (ImGui.ImageButton(mountIcon.ImGuiHandle, new Vector2(45, 45)))
                     UIService.getInstance().toggleMountSettingsUi(mount);
 

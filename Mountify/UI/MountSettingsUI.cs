@@ -1,31 +1,34 @@
-using System;
+﻿using System;
 using System.Numerics;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 using Mountify.Data;
 using Mountify.Services;
+using Mountify.Utils;
 
 namespace Mountify.UI;
 
 public class MountSettingsUI : Window, IDisposable {
-    private PluginServices services;
-
     private MountData mount;
     private bool enableBGM;
 
-    public MountSettingsUI(Mountify plugin, PluginServices services)
+    public MountSettingsUI(Mountify plugin)
         : base("Mountify-Mount_Settings", ImGuiWindowFlags.NoResize) {
-        this.services = services;
-
-
         SizeConstraints = new WindowSizeConstraints {
             MinimumSize = new Vector2(300, 200),
             MaximumSize = new Vector2(300, 200)
         };
     }
 
+    private void followParent() {
+        var parentPos = UIService.getInstance().getMountListUI().Position;
+        var parentSize = UIService.getInstance().getMountListUI().Size;
+        if (parentPos != null && parentSize != null)
+            Position = new Vector2(parentPos.Value.X + parentSize.Value.X + 10, parentPos.Value.Y);
+    }
+
     public void openMountData(MountData mountData) {
-        services.log.Debug(mountData.ToString());
+        PluginServices.log.Debug(mountData.ToString());
         mount = MountService.getInstance().getMountSettings(mountData);
         enableBGM = mount.isBGMEnabled();
         WindowName = mount.getFormattedName();
@@ -33,7 +36,7 @@ public class MountSettingsUI : Window, IDisposable {
     }
 
     public override void Draw() {
-        var mountIcon = ImageService.getInstance().getIcon(mount.getIcon());
+        var mountIcon = PluginUtils.getIcon(mount.getIcon());
         ImGui.Image(mountIcon.ImGuiHandle, new Vector2(45, 45));
         ImGui.SameLine();
         ImGui.Text(mount.getFormattedName());
@@ -43,10 +46,10 @@ public class MountSettingsUI : Window, IDisposable {
             return;
 
         if (mount.isBGMEnabled() != enableBGM)
-            services.chatGUI.Print($"{mount.getFormattedName()} BGM is " + (enableBGM ? "enabled." : "disabled."));
+            PluginServices.chatGUI.Print($"{mount.getFormattedName()} BGM is " + (enableBGM ? "enabled." : "disabled."));
 
         mount.setBGMEnabled(enableBGM);
-        services.log.Debug($"Saving settings: {mount}");
+        PluginServices.log.Debug($"Saving settings: {mount}");
         MountService.getInstance().setMountSettings(mount);
     }
 
